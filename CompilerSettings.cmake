@@ -12,7 +12,7 @@ function(add_optimization_settings TARGET_NAME)
         $<$<CXX_COMPILER_ID:MSVC>:$<$<STREQUAL:${ARCH_LEVEL},v4>:/arch:AVX512>>
     )
 
-    if (CMAKE_BUILD_TYPE MATCHES "Rel")
+    if (CMAKE_BUILD_TYPE STREQUAL "Release")
         message(STATUS "ChessBuild: Enabling Release options for ${TARGET_NAME}")
         target_compile_options(${TARGET_NAME} PRIVATE
             # LTO
@@ -20,11 +20,9 @@ function(add_optimization_settings TARGET_NAME)
             $<$<AND:$<CXX_COMPILER_ID:Clang>,$<BOOL:${ENABLE_LTO}>>:-flto=thin>
             $<$<AND:$<CXX_COMPILER_ID:MSVC>,$<BOOL:${ENABLE_LTO}>>:/GL;/W4;/permissive->
 
-            $<$<CXX_COMPILER_ID:GNU>:-O3>
-            
+            $<$<CXX_COMPILER_ID:GNU>:-O3>          
 
             $<$<CXX_COMPILER_ID:Clang>:-O3>
-            
 
             $<$<CXX_COMPILER_ID:MSVC>:/O2>
             $<$<CXX_COMPILER_ID:MSVC>:/Oi>
@@ -45,6 +43,12 @@ function(add_optimization_settings TARGET_NAME)
         message(STATUS "ChessBuild: Enabling Debug options for ${TARGET_NAME}")
         target_compile_options(${TARGET_NAME} PRIVATE
             $<$<OR:$<CXX_COMPILER_ID:GNU>,$<CXX_COMPILER_ID:Clang>>:-Og;-g>
+        )
+    elseif(CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo")
+        message(STATUS "ChessBuild: Enabling Profiling options for ${TARGET_NAME}")
+        target_compile_options(${TARGET_NAME} PRIVATE 
+            $<$<OR:$<CXX_COMPILER_ID:GNU>,$<CXX_COMPILER_ID:Clang>>:-O3;-g;-fno-omit-frame-pointer>
+            $<$<CXX_COMPILER_ID:MSVC>:/O2;/Oi;/Ot;/Gt>
         )
     endif()
 endfunction()
