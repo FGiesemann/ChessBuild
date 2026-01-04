@@ -24,3 +24,5 @@ target_link_options(chess_compiler_settings INTERFACE
     $<$<CXX_COMPILER_ID:Clang>:$<$<BOOL:${ENABLE_LTO}>:-flto=thin -fuse-ld=lld>>
     $<$<CXX_COMPILER_ID:MSVC>:$<$<BOOL:${ENABLE_LTO}>:/LTCG /INCREMENTAL:NO>>
 )
+
+set_target_properties(chess_compiler_settings PROPERTIES EXPORT_NO_SYSTEM ON)
