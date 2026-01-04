@@ -21,8 +21,8 @@ function(add_optimization_settings TARGET_NAME)
     )
 
     target_link_options(${TARGET_NAME} PRIVATE
-        $<$<CXX_COMPILER_ID:GNU>:$<$<BOOL:${ENABLE_LTO}>:-flto>>
-        $<$<CXX_COMPILER_ID:Clang>:$<$<BOOL:${ENABLE_LTO}>:-flto=thin -fuse-ld=lld>>
-        $<$<CXX_COMPILER_ID:MSVC>:$<$<BOOL:${ENABLE_LTO}>:/LTCG /INCREMENTAL:NO>>
+        $<$<AND:$<CXX_COMPILER_ID:GNU>,$<BOOL:${ENABLE_LTO}>>:-flto>
+        $<$<AND:$<CXX_COMPILER_ID:Clang>,$<BOOL:${ENABLE_LTO}>>:-flto=thin;-fuse-ld=lld>
+        $<$<AND:$<CXX_COMPILER_ID:MSVC>,$<BOOL:${ENABLE_LTO}>>:/LTCG;/INCREMENTAL:NO>
     )
 endfunction()
