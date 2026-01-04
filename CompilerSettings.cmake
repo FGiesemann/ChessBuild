@@ -1,5 +1,5 @@
 option(ENABLE_LTO "Enable Link Time Optimization" ON)
-set(ARCH_LEVEL "v2" CACHE STRING "x86-64 Architecture Level: generic, v2, v3, v4, native")
+set(ARCH_LEVEL "native" CACHE STRING "x86-64 Architecture Level: generic, v2, v3, v4, native")
 
 function(add_optimization_settings TARGET_NAME)
     set(_ARCH_STR $<IF:$<STREQUAL:${ARCH_LEVEL},native>,native,x86-64-${ARCH_LEVEL}>)
