@@ -2,14 +2,13 @@ option(ENABLE_LTO "Enable Link Time Optimization" ON)
 set(ARCH_LEVEL "v3" CACHE STRING "x86-64 Architecture Level: generic, v2, v3, v4, native")
 
 function(add_optimization_settings TARGET_NAME)
-
     target_compile_options(${TARGET_NAME} PRIVATE
         $<$<OR:$<CXX_COMPILER_ID:GNU>,$<CXX_COMPILER_ID:Clang>>:
             -O3
-            -march=$<IF:$<STREQUAL:${ARCH_LEVEL},native>,native,x86-64-${ARCH_LEVEL}>
-        $<$<BOOL:${ENABLE_LTO}>:-flto=thin>
-            -Wall -Wextra -Wpedantic
+            -march=$<IF:$<STREQUAL:${ARCH_LEVEL},native>,native,x86-64-${ARCH_LEVEL}
         >
+        $<$<AND:$<CXX_COMPILER_ID:GNU>,$<BOOL:${ENABLE_LTO}>>:-flto>
+        $<$<AND:$<CXX_COMPILER_ID:Clang>,$<BOOL:${ENABLE_LTO}>>:-flto=thin>
     
         $<$<CXX_COMPILER_ID:MSVC>:
             /O2 /Oi /Ot /GT
